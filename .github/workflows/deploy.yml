@@ -1,0 +1,30 @@
+name: Build Web App
+ 
+on:
+  workflow_dispatch:
+  push:
+    branches: 
+    - master
+ 
+jobs:
+  build:
+ 
+    runs-on: windows-latest
+ 
+    steps:
+    - uses: actions/checkout@v1
+      name: Checkout Code
+     
+    - name: Setup MSBuild Path
+      uses: warrenbuckley/Setup-MSBuild@v1
+       
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.2
+     
+    - name: Restore NuGet Packages
+      run: nuget restore SimpleFrameworkApp.sln
+ 
+    - name: Build and Publish Web App
+      run: msbuild AspnetDemo/AspnetDemo.sln /p:Configuration=Release /p:DeployOnBuild=true /p:OutDir=output
+ 
+    
